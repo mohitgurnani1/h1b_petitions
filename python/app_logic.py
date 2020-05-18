@@ -5,23 +5,93 @@ import sklearn.metrics
 import sklearn.manifold
 from sklearn.preprocessing import StandardScaler
 # Get PCA components
+import math
 import warnings
 from sklearn.decomposition import PCA
 from sklearn import preprocessing
+import re
+from matplotlib.ticker import FuncFormatter
+import os
+
+def job_wages(df):
+  job_titles = ['PROGRAMMER ANALYST', 'SOFTWARE ENGINEER', 'BUSINESS ANALYST', 'SENIOR SOFTWARE ENGINEER',
+                'TECHNOLOGY LEAD - US' , 'ASSISTANT PROFESSOR', 'SENIOR CONSULTANT', 'DATABASE ADMINISTRATOR', 'PHYSICAL THERAPIST', 'MARKET RESEARCH ANALYST']
+  return df[df['JOB_TITLE'].isin(job_titles)].groupby('JOB_TITLE')['PREVAILING_WAGE'].mean().reset_index()
+
+def job_petitions(df):
+  # print(df['JOB_TITLE'].value_counts()[:30]) #Top 30 job roles
+  job_titles = ['PROGRAMMER ANALYST', 'SOFTWARE ENGINEER', 'BUSINESS ANALYST', 'SENIOR SOFTWARE ENGINEER',
+                'TECHNOLOGY LEAD - US' , 'ASSISTANT PROFESSOR', 'SENIOR CONSULTANT', 'DATABASE ADMINISTRATOR', 'PHYSICAL THERAPIST', 'MARKET RESEARCH ANALYST']
+
+  return df[df['JOB_TITLE'].isin(job_titles)]['JOB_TITLE'].value_counts().div(1000).reset_index()
+
+
+def geo_map_petitions(df):
+  temp =  df['state'].value_counts().reset_index()
+  temp.columns = ['state', 'count']
+  temp['state'] = temp['state'].apply(lambda x: x.title())
+  temp['count'] = temp['count'].apply(lambda x: range(x))
+  return temp
+
+def geo_map_wages(df):
+  temp =  df.groupby('state')['PREVAILING_WAGE'].mean().reset_index()
+  temp.columns = ['state', 'count']
+  temp['state'] = temp['state'].apply(lambda x: x.title())
+  temp['count'] = temp['count'].apply(lambda x: wage_range(x))
+  return temp
+
+def wage_range(x):
+  if x > 180000:
+    return 0
+  elif x > 140000:
+    return 1
+  elif x > 100000:
+    return 2
+  else:
+    return 3
+
+
+def range(x):
+  if x > 200000:
+    return 0
+  elif x > 90000:
+    return 1
+  elif x > 20000:
+    return 2
+  else:
+    return 3
+
+def employers_wages(df):
+  return df.groupby('EMPLOYER_NAME')['PREVAILING_WAGE'].mean().nlargest(10).reset_index()
+
+def employers_petition(df):
+  return df['EMPLOYER_NAME'].value_counts().nlargest(10).reset_index()
 
 def feature_engg(df):
-  numeric_feats = df.dtypes[df.dtypes != "object"].index
-  skewed_feats = df[numeric_feats].skew(axis=0, skipna=True)
-  skewed_feats = skewed_feats[skewed_feats > 1]
-  skewed_feats = skewed_feats.index
-  df[skewed_feats] = np.log1p(df[skewed_feats])
+  df = df.drop(["Unnamed: 0"], axis=1)
+  df['state'] = df['WORKSITE'].apply(lambda x: re.sub(r"^.*,", "", x).strip())
+  df['city'] = df['WORKSITE'].apply(lambda x: re.sub(r",.*", "", x).strip())
+  del df['SOC_NAME']
+  del df['lat']
+  del df['lon']
+  del df['WORKSITE']
+  df = df.dropna()
+  return df
+
+def convert_cat(df2):
+  df = df2.copy(deep=True)
   object_feats = df.dtypes[df.dtypes == "object"].index
   for i in object_feats:
-    df[i] = df[i].fillna('None')
     df[i] = df[i].astype('category')
     df[i] = df[i].cat.codes
+  return df
+
+
+def get_histogram(df):
+  return df['YEAR']
 
 def compute_sample(df, num = 358):
+  num = math.floor(df.shape[0]/100)
   df_sample = df.sample(n= num)
   return df_sample
 
@@ -36,10 +106,6 @@ def compute_elbow(df):
     )
     km.fit(df)
     distortions.append(km.inertia_)
-    # plt.plot(range(1, 11), distortions, marker='o')
-    # plt.xlabel('Number of clusters')
-    # plt.ylabel('Distortion')
-    # plt.show()
   return distortions
 
 def sk_normalize(df):
@@ -64,88 +130,36 @@ def compute_stratified(df, n = 4):
   return df_stratified
 
 def get_pca(df):
-  pcamodel = PCA(n_components=16)
+  pcamodel = PCA(n_components=4)
   pca = pcamodel.fit_transform(sk_normalize(df))
   return pcamodel, pca
 
 def scree_plot(df):
   pcamodel, pca = get_pca(df)
-  #variance_ratio = pcamodel.explained_variance_ / sum(pcamodel.explained_variance_)
   return [*range(1, len(pcamodel.explained_variance_ratio_) + 1)], pcamodel.explained_variance_ratio_ * 100, np.cumsum(pcamodel.explained_variance_ratio_ * 100)
-  # plt.bar(range(1, len(variance_ratio) + 1), variance_ratio * 100)
-  # plt.ylabel('Explained variance')
-  # plt.xlabel('Components')
-  # plt.plot(range(1, len(variance_ratio) + 1),
-  #          np.cumsum(variance_ratio * 100),
-  #          c='red',
-  #          label="Cumulative Explained Variance")
-  # plt.legend(loc='upper left')
+
 def sum_sq(a):
   sum = 0
   for i in a:
     sum += i * i
   return sum
 
-def top_3_attributes(df):
-  top_3 = top_3_names(df)
-  return df[top_3]
-  # x = {}
-  # for i in df.columns[top_3]:
-  #   x[i] = list(temp.get(i))
-  # return x
-
-def top_3_names(df):
-  pcamodel, pca = get_pca(df)
-  pcamodel_tr = np.transpose(pcamodel.components_)
-  most_important = [sum_sq(pcamodel_tr[i][:3]) for i in range(len(pcamodel_tr))]
-  sum_squares, attributes = zip(*sorted(zip(most_important, df.columns), reverse=True))
-  result = list(attributes[:3])
-  return result
-
-
-
-
 def scatter_plot(pca):
-  #plt.scatter(pca[:, 0], pca[:, 1])
   return pca[:, 0], pca[:, 1]
 
 def scatter_plot_pca(df):
-  pcamodel, pca = get_pca(df)
+  pcamodel, pca = get_pca(df_sample_)
   return scatter_plot(pca)
 
 def scatter_plot_mds_euc(df):
-  dissimilarity_distance_matrix = sklearn.metrics.pairwise.pairwise_distances(sk_normalize(df), metric='euclidean')
+  dissimilarity_distance_matrix = sklearn.metrics.pairwise.pairwise_distances(df_sample_, metric='euclidean')
   mds = sklearn.manifold.MDS(n_components=2, dissimilarity='precomputed').fit_transform(dissimilarity_distance_matrix)
   return scatter_plot(mds)
 
-def scatter_plot_mds_corr(df):
-  dissimilarity_distance_matrix = sklearn.metrics.pairwise.pairwise_distances(sk_normalize(df), metric='correlation')
-  mds = sklearn.manifold.MDS(n_components=2, dissimilarity='precomputed').fit_transform(dissimilarity_distance_matrix)
-  return scatter_plot(mds)
 
-train=pd.read_csv('train.csv')
-features = ['SalePrice', 'OverallQual', 'GrLivArea' ,'GarageCars',
-'OverallQual',
-'YearBuilt',
-'TotalBsmtSF',
-'TotRmsAbvGrd',
-'MSZoning',
-'LotShape',
-'Neighborhood',
-'Condition1',
-'BldgType',
-'HouseStyle',
-'RoofStyle',
-'SaleCondition', 'Fireplaces']
-
-df = train[features]
-feature_engg(df)
+df=pd.read_csv('../h1b_kaggle.csv')
+df = feature_engg(df)
 df_sample = compute_sample(df)
-df_stratified = compute_stratified(df, 4)
+df_sample_ = sk_normalize(convert_cat(df_sample))
+#df_stratified = compute_stratified(df, 4)
 warnings.filterwarnings("ignore", category=DeprecationWarning)
-####Todo
-# 1. show elbow in d3
-# Normalize? how.. sk_normalize seems better
-## bias ?? introduced...what? I think its less
-## three attributes -- show calculations?
-##
