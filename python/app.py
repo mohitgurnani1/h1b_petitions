@@ -10,14 +10,21 @@ def barchart_job(data, feature):
   df = get_data(data)
   if feature == 'petitions':
     result = jsonify(app_decorator.get_petitions_jobs(df))
-  elif feature == 'petitions-success-ratio':
-    result = jsonify(app_decorator.get_scatter_plot_pca(df))
   elif feature == 'wages':
     result = jsonify(app_decorator.get_wages_jobs(df))
 
   result.headers.add('Access-Control-Allow-Origin', '*')
   return result
 
+@app.route('/data/<data>/feature/<feature>/jobstacked', methods=['GET'])
+def grouped_stacked_barchart_job(data, feature):
+  df = get_data(data)
+  result = app_logic.job_petition_success_ratio(df)
+
+  result.to_csv('sample/petitionsstatus.csv', index=False)
+  result = send_from_directory('sample', 'petitionsstatus.csv', as_attachment=True)
+  result.headers.add('Access-Control-Allow-Origin', '*')
+  return result
 
 @app.route('/data/<data>/feature/<feature>/employer')
 def barchart_horizontal_employers(data, feature):

@@ -25,6 +25,26 @@ def job_petitions(df):
 
   return df[df['JOB_TITLE'].isin(job_titles)]['JOB_TITLE'].value_counts().div(1000).reset_index()
 
+def job_petition_success_ratio(df):
+  print("Inside job_petition_success_ratio")
+  job_titles = ['PROGRAMMER ANALYST', 'SOFTWARE ENGINEER', 'BUSINESS ANALYST', 'SENIOR SOFTWARE ENGINEER',
+                'TECHNOLOGY LEAD - US' , 'ASSISTANT PROFESSOR', 'SENIOR CONSULTANT', 'DATABASE ADMINISTRATOR', 'PHYSICAL THERAPIST', 'MARKET RESEARCH ANALYST']
+  header = {'JOB_TITLE':[],'CERTIFIED_CASES':[],'FAILED_CASES':[]}
+  res_df = pd.DataFrame(data = header)
+  for job in job_titles:
+    conf_num = df[(df['JOB_TITLE']==job) & (df['CASE_STATUS']=='CERTIFIED')].count()[0]
+    total = df[df['JOB_TITLE']==job].count()[0]
+    conf = (conf_num/total) * 100
+    failed = 100 - conf
+    res_df.loc[get_index(res_df)]=[job, conf, failed]
+  # print(res_df)
+  return res_df
+   
+def get_index(df):
+  index = 0
+  if df.empty == False:
+    index = max(df.index) + 1
+  return index
 
 def geo_map_petitions(df):
   temp =  df['state'].value_counts().reset_index()

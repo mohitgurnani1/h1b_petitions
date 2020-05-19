@@ -1,54 +1,54 @@
 state,count
-California,0
-Texas,0
-New York,0
-New Jersey,0
-Illinois,1
-Massachusetts,1
-Pennsylvania,1
-Florida,1
-Georgia,1
-Washington,1
-Virginia,1
-Michigan,2
-North Carolina,2
-Ohio,2
-Maryland,2
+Alabama,0
+Alaska,0
+Arizona,1
+Arkansas,2
+California,1
+Colorado,1
 Connecticut,2
-Minnesota,2
-Arizona,2
-Missouri,2
-Wisconsin,2
-Colorado,2
-Indiana,2
-Tennessee,2
-Oregon,2
-District Of Columbia,2
-Delaware,3
+Delaware,1
+District Of Columbia,1
+Florida,1
+Georgia,2
+Hawaii,2
+Idaho,1
+Illinois,0
+Indiana,3
 Iowa,3
-Arkansas,3
-Kansas,3
-Utah,3
-South Carolina,3
-Kentucky,3
-Rhode Island,3
-Louisiana,3
-Oklahoma,3
-Alabama,3
-New Hampshire,3
-Nebraska,3
-Nevada,3
-New Mexico,3
-Mississippi,3
-Idaho,3
-Maine,3
-Hawaii,3
-Na,3
-West Virginia,3
-North Dakota,3
-Vermont,3
-South Dakota,3
-Puerto Rico,3
-Alaska,3
+Kansas,1
+Kentucky,2
+Louisiana,2
+Maine,1
+Maryland,1
+Massachusetts,1
+Michigan,1
+Minnesota,2
+Mississippi,2
+Missouri,2
 Montana,3
-Wyoming,3
+Na,0
+Nebraska,2
+Nevada,0
+New Hampshire,3
+New Jersey,1
+New Mexico,1
+New York,1
+North Carolina,2
+North Dakota,3
+Ohio,2
+Oklahoma,2
+Oregon,1
+Pennsylvania,2
+Puerto Rico,3
+Rhode Island,2
+South Carolina,1
+South Dakota,0
+Tennessee,2
+Texas,2
+Utah,1
+Vermont,0
+Virginia,1
+Washington,1
+West Virginia,0
+Wisconsin,2
+Wyoming,1

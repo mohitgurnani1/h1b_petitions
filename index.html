@@ -140,7 +140,6 @@
       <div class="card" >
         <div class="card-body" id="barchart" style="padding: 0.3rem">
             <h5 class="card-title" id="barchart-heading" style="text-align:center"></h5>
-
         </div>
       </div>
     </div>
@@ -185,7 +184,7 @@
     <script type="text/javascript" src="js/geo-map.js"></script>
     <script type="text/javascript" src="js/scatterplot.js"></script>
     <script type="text/javascript" src="js/histogram.js"></script>
-
+    <script type="text/javascript" src="js/grouped-stacked-bar-chart.js"></script>
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
 
@@ -231,6 +230,8 @@
     d3.select(this).classed("active",true);
     tab = 'petitions-success-ratio'
     d3.selectAll("svg").remove();
+    drawGroupedStackedBarChart(tab, dtype);
+    // drawEmployerStackedBarChart(tab, dtype);
   });
 
   d3.select('#g3').on('click', function () {   

@@ -31,7 +31,15 @@ def get_wages_jobs(df):
   }
   return body
 
-
+# def get_petition_success_ratio(df):
+#   print("Inside get_petition_success_ratio")
+#   temp = app_logic.job_petition_success_ratio(df)
+#   temp.columns = ['Job Title', 'Case Status']
+#   body = {
+#     "Job Title": list(temp['Job Title']),
+#     "Case Status": list(temp['Case Status'])
+#   }
+#   return body
 
 def get_petitions_employers(df):
   temp = app_logic.employers_petition(df)
