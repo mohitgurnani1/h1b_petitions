@@ -1,277 +1,377 @@
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
+    <link rel="stylesheet" href="style.css"></link>
     <style>
-        
-      .arc text {
-          font: 10px sans-serif;
-          text-anchor: middle;
+
+     .toolTip {
+        position: absolute;
+        display: none;
+        background-color: black;
+        color: #fff;
+        border: 1px solid #6F257F;
+        border-radius: 1px;
+        padding: 2px;
+        text-align: center;
+      }
+
+
+
+        .brush .selection {
+            fill: steelblue;
+        }
+
+        .area {
+            fill: steelblue;
+            clip-path: url(#clip);
+        }
+
+        .arc text {
+            font: 10px sans-serif;
+            text-anchor: middle;
         }
 
         .arc path {
-          stroke: #fff;
+            stroke: #fff;
         }
 
         text {
-          font-family: sans-serif;
+            font-family: sans-serif;
         }
-        .axis--x path {
-          display: none;
+
+        /*.axis--x path {*/
+        /*    display: none;*/
+        /*}*/
+
+        path:hover {
+            fill-opacity: .7;
         }
-       path:hover {
-        fill-opacity: .7;
-      }
 
-      /* Style for Custom Tooltip */
-      div.tooltip {   
-        position: absolute;           
-        text-align: center;           
-        width: 60px;                  
-        height: 28px;                 
-        padding: 2px;             
-        font: 12px sans-serif;        
-        background: white;   
-        border: 0px;      
-        border-radius: 8px;           
-        pointer-events: none;         
-      }
-              
-      /* Legend Font Style */
-      
+        .btn:focus {
+            box-shadow: none;
+        }
 
-    svg {
-        font: 14px sans-serif;
-        padding: 0px;
-      }
 
-      .axis,
-      .frame {
-        shape-rendering: crispEdges;
-      }
+        /*   !* Style for Custom Tooltip *!*/
+        /*div.tooltip {*/
+        /*    position: absolute;*/
+        /*    text-align: center;*/
+        /*    width: 60px;*/
+        /*    height: 28px;*/
+        /*    padding: 2px;*/
+        /*    font: 12px sans-serif;*/
+        /*    background: white;*/
+        /*    border: 0px;*/
+        /*    border-radius: 8px;*/
+        /*    pointer-events: none;*/
+        /*}*/
 
-      .axis line {
-        stroke: #ddd;
-      }
+        /* Legend Font Style */
 
-      .axis path {
-        display: none;
-      }
 
-      .cell text {
-        font-weight: bold;
-        text-transform: capitalize;
-        fill: black;
-      }
+        svg {
+            font: 14px sans-serif;
+            padding: 0px;
+        }
 
-      .frame {
-        fill: none;
-        stroke: #aaa;
-      }
+        .axis,
+        .frame {
+            shape-rendering: crispEdges;
+        }
 
-      circle {
-        fill-opacity: .7;
-      }
 
-      circle.hidden {
-        fill: #ccc !important;
-      }
+        /*.axis line {*/
+        /*    stroke: #ddd;*/
+        /*}*/
 
-      .extent {
-        fill: #000;
-        fill-opacity: .125;
-        stroke: #fff;
-      }
+        /*.axis path {*/
+        /*    display: none;*/
+        /*}*/
+
+        .cell text {
+            font-weight: bold;
+            text-transform: capitalize;
+            fill: black;
+        }
+
+        .frame {
+            fill: none;
+            stroke: #aaa;
+        }
+
+        circle {
+            fill-opacity: .7;
+        }
+
+        circle.hidden {
+            fill: #ccc !important;
+        }
+
+        .extent {
+            fill: #000;
+            fill-opacity: .125;
+            stroke: #fff;
+        }
 
     </style>
     <title>Visualization</title>
-  </head>
-  <body>
+</head>
+<body>
 
 
-    <nav class="navbar navbar-expand navbar-dark sticky-top bg-dark">
-      <a class="navbar-brand" href="#">Group 8</a>
-      <div class="collapse navbar-collapse row" id="navbarTogglerDemo03">
-      <ul class="navbar-nav mr-auto mt-2 mt-lg-0" style="padding-left:100px">
-        <li class="nav-item" style="padding-left:50px">
-          <a class="nav-link" href="#" id="g1">Petitions</a>
-        </li>
-        <li class="nav-item" style="padding-left:50px">
-          <a class="nav-link" href="#" id="g2">Petition Success Ratio</a>
-        </li>
-        <li class="nav-item" style="padding-left:50px">
-          <a class="nav-link" href="#" id="g3">Wages</a>
-        </li>  
-        <li class="nav-item" style="padding-left:50px">
-          <a class="nav-link" href="#" id="g4">Overall stats</a>
-        </li>  
-      </ul>
+<nav class="navbar navbar-expand navbar-dark sticky-top bg-dark">
+    <a class="navbar-brand" href="#">Group 8</a>
+    <div class="collapse navbar-collapse row" id="navbarTogglerDemo03">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0" style="padding-left:100px">
+            <li class="nav-item" style="padding-left:50px">
+                <a class="nav-link" href="#" id="g1">H1B Petitions</a>
+            </li>
+            <li class="nav-item" style="padding-left:50px">
+                <a class="nav-link" href="#" id="g2">H1B Petition Success Ratio</a>
+            </li>
+            <li class="nav-item" style="padding-left:50px">
+                <a class="nav-link" href="#" id="g3">Wages</a>
+            </li>
+            <li class="nav-item" style="padding-left:50px">
+                <a class="nav-link" href="#" id="g4">Overall stats</a>
+            </li>
+        </ul>
 
-    <div class="form-inline my-2 my-lg-0">
+        <div class="form-inline my-2 my-lg-0">
 
-        <label class="form-check-label" style="color:#fffa; padding-right: 20px">
-          <input type="radio" class="form-check-input" name="optradio" checked>Original
-        </label>
-        
-        <label class="form-check-label" style="color:#fffa;  padding-right: 20px">
-          <input type="radio" class="form-check-input" name="optradio">Sampled
-        </label>
+            <label class="form-check-label" style="color:#fffa; padding-right: 20px">
+                <input type="radio" class="form-check-input" name="optradio" checked>Original
+            </label>
 
-        <a href="#" class="btn btn-info btn-md">
-          <span class="glyphicon glyphicon-refresh"></span> Refresh
-        </a>
-    </div>
-  
-    </div>
-    </nav>
+            <label class="form-check-label" style="color:#fffa;  padding-right: 20px">
+                <input type="radio" class="form-check-input" name="optradio">Sampled
+            </label>
 
-
-     <div class="container-fluid" >
-      <div class="row" style="padding-top: 30px">
-
-
-     <div style="padding-left: 0.1rem">
-      <div class="card" >
-        <div class="card-body" id="barchart" style="padding: 0.3rem">
-            <h5 class="card-title" id="barchart-heading" style="text-align:center"></h5>
+            <button class="btn btn-info btn-md" id="refresh">Refresh</button>
         </div>
-      </div>
+
     </div>
+</nav>
 
-     <div style="padding-left: 0.1rem">
-      <div class="card" >
-        <div class="card-body" id="piechart" style="padding: 0.3rem">
-            <h5 class="card-title" id="piechart-heading" style="text-align:center"></h5>
 
+<div class="container-fluid">
+    <div class="row" style="padding-top: 5px">
+
+        <div style="padding-left: 0.1rem">
+            <div class="card">
+                <div class="card-body" id="barchart" style="padding: 0.3rem">
+                    <h5 class="card-title" id="barchart-heading" style="text-align:center"></h5>
+
+                </div>
+            </div>
         </div>
-        <div id="value"></div>
-      </div>
-    </div>
 
-     <div style="padding-left: 0.1rem">
-      <div class="card">
-        <div class="card-body" id="geomap" style="padding: 0.25rem">
-        <h5 class="card-title" id="geomap-heading" style="text-align:center"></h5>
+        <div style="padding-left: 0.1rem">
+            <div class="card">
+                <div class="card-body" id="piechart" style="padding: 0.3rem">
+                    <h5 class="card-title" id="piechart-heading" style="text-align:center"></h5>
+
+                </div>
+                <div class="row" id="slide2"></div>
+            </div>
         </div>
-      </div>
+
+        <div style="padding-left: 0.1rem">
+            <div class="card">
+                <div class="card-body" id="geomap" style="padding: 0.25rem">
+                    <h5 class="card-title" id="geomap-heading" style="text-align:center"></h5>
+                </div>
+            </div>
+        </div>
+        <div class="row" id="slide"></div>
     </div>
-
-
-
-    </div>
-    
-     </div>
+</div>
 <!--    <script src="https://d3js.org/d3.v4.js"></script>-->
 
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <script src="https://d3js.org/d3.v4.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.4/lodash.min.js"></script>
-    <script src="https://unpkg.com/d3-simple-slider@0.1.2/build/d3-simple-slider.js"></script>
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.4/lodash.min.js"></script>
+<script src="https://unpkg.com/d3-simple-slider@0.1.2/build/d3-simple-slider.js"></script>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="js/bar-chart.js"></script>
-    <script type="text/javascript" src="js/pie-chart.js"></script>
-    <script type="text/javascript" src="js/bar-chart-horizontal.js"></script>
-    <script type="text/javascript" src="js/geo-map.js"></script>
-    <script type="text/javascript" src="js/scatterplot.js"></script>
-    <script type="text/javascript" src="js/histogram.js"></script>
-    <script type="text/javascript" src="js/grouped-stacked-bar-chart.js"></script>
-    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="js/bar-chart.js"></script>
+<script type="text/javascript" src="js/pie-chart.js"></script>
+<script type="text/javascript" src="js/bar-chart-horizontal.js"></script>
+<script type="text/javascript" src="js/geo-map.js"></script>
+<script type="text/javascript" src="js/scatterplot.js"></script>
+<script type="text/javascript" src="js/histogram.js"></script>
+<script type="text/javascript" src="js/slidebrush.js"></script>
+<script type="text/javascript" src="js/grouped-stacked-bar-chart.js"></script>
+<script type="text/javascript" src="js/parallel-coordinates-chart.js"></script>
+<script src="https://bl.ocks.org/syntagmatic/raw/3341641/render-queue.js"></script>
 
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
 
 <!-- 	<script type="text/javascript" src="histogram.js"></script>-->
 
 
-	<script>
+<script>
 
-	var hoverColor = d3.rgb(54, 162, 235, 1);
-	var barColor = d3.rgb(54, 162, 235, 0.5);
-	var strokeColor = d3.rgb(54, 162, 235, 0.9);
-	var strokeBorder = 1;
+    $("body").css("overflow", "hidden");
+
+    var hoverColor = d3.rgb(54, 162, 235, 1);
+    var barColor = d3.rgb(54, 162, 235, 0.5);
+    var strokeColor = d3.rgb(54, 162, 235, 0.9);
+    var strokeBorder = 1;
     var tab = 'petitions';
     var dtype = 'original';
+    var syear = 0;
+    var eyear = 650;
 
-	function saveData(data){
-	  console.log(data);
-	  this.data = data;
-	}
+    d3.select("#g1").classed("active", true);
+    petitions();
 
-	function saveFeat(feat){
-	  this.feat = feat
+    //set the dimensions and margins of the graph
+    var margin = {top: 10, right: 30, bottom: 60, left: 50};
+    var width = 600 - margin.left - margin.right, height = 550 - margin.top - margin.bottom;
+
+
+    d3.select('#g1').on('click', function () {
+        d3.selectAll("a").classed("active", false);
+        d3.select(this).classed("active", true);
+        tab = 'petitions';
+        d3.selectAll("canvas").remove();
+        d3.selectAll("svg").remove();
+        barChartPresent = false;
+        bcPresent = false;
+        geoPresent = false;
+        d3.select("#piechart-heading").text("");
+        d3.select("#barchart-heading").text("");
+        d3.select("#geomap-heading").text("");
+        petitions();
+    });
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-	//set the dimensions and margins of the graph
-	var margin = {top: 10, right: 30, bottom: 60, left: 50};
-	var width = 600 - margin.left - margin.right, height = 550 - margin.top - margin.bottom;
+    function petitions() {
+        bhChosenValue = null;
+        bcChosen = null;
+        geoChoosenValue = null;
+        if(slidersvg)
+            slidersvg.remove();
+        drawBarChart(tab, dtype, null, null);
+        drawHorizontalBarChart(tab, dtype, null, null);
+        drawGeoMap(tab, dtype, null, null);
+        sleep(3000).then(() => drawSlideBrush());
+    }
 
-
-	d3.select('#g1').on('click', function () {
-    d3.selectAll("a").classed("active", false);   
-    d3.select(this).classed("active",true);
-    tab = 'petitions';
-    d3.selectAll("svg").remove();
-    drawBarChart(tab, dtype);
-    drawHorizontalBarChart(tab, dtype);
-    drawGeoMap(tab, dtype);
-  });
-
-  d3.select('#g2').on('click', function () {   
-    d3.selectAll("a").classed("active", false);   
-    d3.select(this).classed("active",true);
-    tab = 'petitions-success-ratio'
-    d3.selectAll("svg").remove();
-    drawGroupedStackedBarChart(tab, dtype);
+    d3.select('#g2').on('click', function () {
+        d3.selectAll("a").classed("active", false);
+        d3.select(this).classed("active", true);
+        tab = 'petitions-success-ratio';
+        d3.selectAll("canvas").remove();
+        d3.selectAll("svg").remove();
+        geoChoosenValue = null;
+        geoPresent = false;
+         bhChosenValue = null;
+        bcChosen = null;
+        drawGroupedStackedBarChart(tab, dtype, "#barchart", 'petitions');
+        drawGroupedStackedBarChart(tab, dtype, "#piechart", 'wages');
+        drawGeoMap(tab, dtype, null, null);
     // drawEmployerStackedBarChart(tab, dtype);
-  });
+    });
 
-  d3.select('#g3').on('click', function () {   
-    d3.selectAll("a").classed("active", false);   
-    d3.select(this).classed("active",true);
-    tab = 'wages';
-    d3.selectAll("svg").remove();
-    drawBarChart(tab, dtype);
-    drawHorizontalBarChart(tab, dtype);
-    drawGeoMap(tab, dtype);
-  });
+    d3.select('#g3').on('click', function () {
+        d3.selectAll("a").classed("active", false);
+        d3.select(this).classed("active", true);
+        tab = 'wages';
+        d3.selectAll("canvas").remove();
+        d3.selectAll("svg").remove();
+        //d3.selectAll("svg > *").remove();
+        //location.reload();
+        //d3.select("#slide2").remove();
+         bhChosenValue = null;
+        bcChosen = null;
+        geoChoosenValue = null;
+        barChartPresent = false;
+        bcPresent = false;
+        geoPresent = false;
+        d3.select("#piechart-heading").text("");
+        d3.select("#barchart-heading").text("");
+        d3.select("#geomap-heading").text("");
+
+        wages();
+
+    });
+
+    function wages() {
+        bhChosenValue = null;
+        bcChosen = null;
+        geoChoosenValue = null;
+        if(slidersvg)
+            slidersvg.remove();
+        drawBarChart(tab, dtype, null, null);
+        drawHorizontalBarChart(tab, dtype, null, null);
+        drawGeoMap(tab, dtype, null, null);
+        sleep(3000).then(() => drawSlideBrush());
+    }
 
     d3.select('#g4').on('click', function () {
-    d3.selectAll("a").classed("active", false);
-    d3.select(this).classed("active",true);
-    d3.selectAll("svg").remove();
+        d3.selectAll("a").classed("active", false);
+        d3.select(this).classed("active", true);
+        d3.selectAll("svg").remove();
+        bhChosenValue = null;
+        bcChosen = null;
+        geoChoosenValue = null;
+        drawScatterPlot('pca', dtype, "#geomap");
+        drawHistogram(30, dtype);
+        drawParallelCoordinates();
+    });
 
-    //drawScatterPlot('mds', dtype, "#piechart");
-    drawScatterPlot('pca', dtype, "#geomap");
-    //console.log(data_histogram);
-    drawHistogram(30, dtype);
-    //drawSlider(dtype);
-  });
-
-
-  var inputElems = d3.selectAll("input");
-
-  inputElems.on("change", function(d, i){
-      if(i === 0)
-          dtype= 'original';
-      else
-          dtype= 'sampled';
-      console.log(dtype);
-  });
-
-
-
-	</script>
+    d3.select('#refresh').on('click', function () {
+        //d3.select(this).classed("active", false);
+        //geoPresent = false;
+        syear = 0;
+        eyear = 650;
+        if (tab == 'wages') {
+            wages();
+        } else if (tab == 'petitions') {
+            petitions();
+        } else if (tab == 'petitions-success-ratio') {
+        } else {
+        }
 
 
+    });
 
-  </body>
+    var inputElems = d3.selectAll("input");
+
+    inputElems.on("change", function (d, i) {
+        if (i === 0)
+            dtype = 'original';
+        else
+            dtype = 'sampled';
+        console.log(dtype);
+    });
+
+
+</script>
+
+
+</body>
 </html>

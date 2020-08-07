@@ -114,7 +114,7 @@ function drawHistogram(binCount, dtype) {
 
         var slider = d3Slider.sliderHorizontal()
             .domain(d3.extent(data))
-            .width(300)
+            .width(400)
             .tickFormat(d3.format('d'))
             .ticks(5)
             .default(30)
@@ -125,13 +125,15 @@ function drawHistogram(binCount, dtype) {
             });
 
 
-        var g = d3.select("#value").append("svg")
-            .attr("width", 500)
+        var g = d3.select("#slide2").append("svg")
+            .attr("width", 400)
             .attr("height", 100)
             .append("g")
-            .style("top", "400px")
+            .style("top", "10px")
+            .style("left", "20px")
             .attr("transform", "translate(30,30)");
 
+        console.log('slider should be invoked here');
         g.call(slider);
 
     });

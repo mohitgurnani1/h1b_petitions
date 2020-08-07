@@ -11,7 +11,7 @@ function drawScatterPlot(gtype, dtype, html){
     d3.select(html+'-heading').text('PCA Scatterplot');
 
     var margin = {top: 10, right: 30, bottom: 120, left: 50};
-    var width = 500 - margin.left - margin.right, height = 500 - margin.top - margin.bottom;
+    var width = 400 - margin.left - margin.right, height = 450 - margin.top - margin.bottom;
 
       var svg = d3.select(html)
       .append("svg")
